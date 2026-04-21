@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Explainer AI</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+        textarea { width: 100%; height: 150px; margin-bottom: 10px; font-family: monospace; }
+        button { padding: 10px 20px; background: #0070f3; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h2>Dataset Explainer AI</h2>
+    <p>Paste a snippet of raw CSV data below. The AI will classify the columns and suggest a machine learning model.</p>
+    
+    <textarea id="csvInput" placeholder="age,job,marital,education,default,balance,housing,loan
+30,unemployed,married,primary,no,1787,no,no
+33,services,married,secondary,no,4789,yes,yes"></textarea>
+    
+    <button onclick="analyzeData()">Analyze Dataset</button>
+    
+    <div id="result">Results will appear here...</div>
+
+    <script>
+        async function analyzeData() {
+            const resultDiv = document.getElementById('result');
+            const csvData = document.getElementById('csvInput').value;
+            
+            resultDiv.innerText = "Analyzing data...";
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ csv_snippet: csvData })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerText = data.analysis;
+                } else {
+                    resultDiv.innerText = "Error: " + data.detail;
+                }
+            } catch (error) {
+                resultDiv.innerText = "Network error occurred. Make sure the backend is running.";
+            }
+        }
+    </script>
+</body>
+</html>
