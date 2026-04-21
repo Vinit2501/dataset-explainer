@@ -11,7 +11,7 @@ genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
 class DataPayload(BaseModel):
     csv_snippet: str
 
-@app.post("/api/analyze")
+@app.post("/api")
 def analyze_dataset(payload: DataPayload):
     try:
         model = genai.GenerativeModel('gemini-1.5-flash')
